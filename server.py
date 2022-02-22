@@ -1,11 +1,18 @@
 from flask import Flask, request, redirect
-from mysqlconnection import MySQLConnection
+from mysqlconnection import MySQLConnector
 app = Flask(__name__)
-mysql = MySQLConnection.MySQLConnector(app, 'fandom_Pokemon_db')
+mysql = MySQLConnector(app, 'fandom_pokemon_db')
 
 @app.route("/")
 def index():
     return "Hello World!"
+
+@app.route("/allusers")
+def getAllUsers():
+    query = "SELECT * FROM users"
+    allUsers = mysql.query_db('SELECT * FROM users')
+    print(allUsers)
+    return redirect("/")
 
 @app.route("/register", methods=['POST'])
 def register():
