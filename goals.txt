@@ -1,0 +1,4 @@
+learning SQLAlchemy ORM
+API Calls
+Refine database relationships
+React integration with flask 
