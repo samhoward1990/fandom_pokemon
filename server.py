@@ -1,5 +1,7 @@
 from flask import Flask, request, redirect
 from mysqlconnection import MySQLConnector
+import hashlib
+import os, binascii
 app = Flask(__name__)
 mysql = MySQLConnector(app, 'fandom_pokemon_db_test')
 
@@ -17,17 +19,46 @@ def getAllUsers():
         users[user['email']] = user
     return users
 
-
 @app.route("/register", methods=['POST'])
 def register():
-    query = 'INSERT INTO users (email, username, password, created_at, updated_at) VALUES (:email, :username, :password, NOW(), NOW())'
+    email = request.form['email']
+    userName = request.form['username']
+    password = request.form['password']
+    salt = binascii.b2a_hex(os.urandom(15))
+    hashedPW = hashlib.md5("{}{}".format(password, salt).encode()).hexdigest()
+    query = 'INSERT INTO users (email, username, password, salt, created_at, updated_at) VALUES (:email, :username, :password, :salt, NOW(), NOW())'
     data = {
-        'email': request.form['email'],
-        'username': request.form['username'],
-        'password': request.form['password']
+        'email': email,
+        'username': userName,
+        'password': hashedPW,
+        'salt': salt
     }
-    newUser = mysql.query_db(query, data)
-    return newUser
+    mysql.query_db(query, data)
+    return redirect('/')
+    
+@app.route("/login", methods=['POST'])
+def login():
+    email = request.form['email']
+    password = request.form['password']
+
+    query = "SELECT * FROM users WHERE users.email = :email LIMIT 1"
+    data = {
+        "email": email
+    }
+    user = mysql.query_db(query, data)
+    print(user[0])
+    print(user[0]['password'])
+    if len(user) != 0:
+        encryptedPW = hashlib.md5(f"{password}{user[0]['salt']}".encode()).hexdigest()
+        print(hashlib.md5("remember{}".format(user[0]['salt']).encode()).hexdigest())
+        print(hashlib.md5("remember{}".format(user[0]['salt']).encode()).hexdigest())
+        print(encryptedPW)
+        print(user[0]['salt'])
+        print(user[0]['password'])
+        if encryptedPW == user[0]['password']:
+            return f"{user[0]['id']}"
+        return "Invalid Password!"
+    return "Invalid Email!"
 
 @app.route('/createcharacter', methods=['POST'])
 def createCharacter():
