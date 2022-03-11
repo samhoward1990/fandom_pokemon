@@ -1,4 +1,4 @@
-#!/Users/joey/coding-projects/pokemon-project/fandom_pokemon/.venv/bin/python3
+#!/Users/juannunez/Desktop/projects/fandom_pokemon/.venv/bin/python3
 # -*- coding: utf-8 -*-
 import re
 import sys
