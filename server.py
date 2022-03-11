@@ -24,8 +24,11 @@ def register():
     email = request.form['email']
     userName = request.form['username']
     password = request.form['password']
+    print(password)
     salt = binascii.b2a_hex(os.urandom(15))
     hashedPW = hashlib.md5("{}{}".format(password, salt).encode()).hexdigest()
+    print(hashlib.md5("{}{}".format("12345678", salt).encode()).hexdigest())
+    print(hashlib.md5("{}{}".format("12345678", salt).encode()).hexdigest())
     query = 'INSERT INTO users (email, username, password, salt, created_at, updated_at) VALUES (:email, :username, :password, :salt, NOW(), NOW())'
     data = {
         'email': email,
@@ -40,7 +43,7 @@ def register():
 def login():
     email = request.form['email']
     password = request.form['password']
-
+    print(password)
     query = "SELECT * FROM users WHERE users.email = :email LIMIT 1"
     data = {
         "email": email
