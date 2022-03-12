@@ -7,7 +7,7 @@ class MySQLConnection(object):
             'host': 'localhost',
             'database': db,
             'user': 'root',
-            'password': 'root',
+            'password': 'that1guy',
             'port': '3306'
         }
         

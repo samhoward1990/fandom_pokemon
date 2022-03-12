@@ -3,11 +3,21 @@ from mysqlconnection import MySQLConnector
 import hashlib
 import os, binascii
 app = Flask(__name__)
-mysql = MySQLConnector(app, 'fandom_pokemon_db_test')
+mysql = MySQLConnector(app, 'fandom_pokemon')
 
 @app.route("/")
 def index():
     return "Hello World!"
+
+@app.route("/testdata")
+def get_test_data():
+    return {
+        "name": "Pikachu",
+        "type": "Electric",
+        "hp": 35,
+        "attack": 55,
+        "defense": 40,
+    }
 
 @app.route("/allusers")
 def getAllUsers():
@@ -72,4 +82,6 @@ def createCharacter():
     }
     mysql.query_db(query, data)
     return redirect('/')
-app.run(debug=True)
+
+if __name__ == "__main__":
+    app.run(debug=True)
