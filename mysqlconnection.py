@@ -1,13 +1,14 @@
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.sql import text
+import os
 
 class MySQLConnection(object):
     def __init__(self, app, db):
         config = {
             'host': 'localhost',
             'database': db,
-            'user': 'root',
-            'password': 'that1guy',
+            'user': os.environ.get("SERVER_USERNAME"),
+            'password': os.environ.get("SERVER_PASSWORD"),
             'port': '3306'
         }
         
