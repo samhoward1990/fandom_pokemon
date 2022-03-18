@@ -6,7 +6,7 @@ def setPass(password, salt):
     return hashedPW
 
 def setPassAgain(password, salt):
-    hashedPW = hashlib.md5(f"{password},{salt}".encode()).hexdigest()
+    hashedPW = hashlib.md5(f"{password}{salt}".encode()).hexdigest()
     return hashedPW
 
 def setPassAgainButDifferent(password, salt):
